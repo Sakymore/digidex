@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { DigimonService } from './digimon.service';
 import { CreateDigimonDto } from './dto/create-digimon.dto';
 import { UpdateDigimonDto } from './dto/update-digimon.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('digimon')
 export class DigimonController {
@@ -14,8 +24,9 @@ export class DigimonController {
   }
 
   @Get()
-  findAll() {
-    return this.digimonService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    console.log({ paginationDto });
+    return this.digimonService.findAll(paginationDto);
   }
 
   @Get(':term')
@@ -24,7 +35,10 @@ export class DigimonController {
   }
 
   @Patch(':term')
-  update(@Param('term') term: string, @Body() updateDigimonDto: UpdateDigimonDto) {
+  update(
+    @Param('term') term: string,
+    @Body() updateDigimonDto: UpdateDigimonDto,
+  ) {
     return this.digimonService.update(term, updateDigimonDto);
   }
 
